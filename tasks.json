@@ -1,0 +1,38 @@
+[
+    {
+      "title": "Tomar remédio",
+      "description": "Tomar remédio para dor de cabeça",
+      "date": "2023-11-29T17:07:00",
+      "icon": "activity1.png"
+    },
+    {
+      "title": "Beber água",
+      "description": "Beber 1 copo de água para hidratar o corpo",
+      "date": "2023-11-29T17:22:00",
+      "icon": "activity2.png"
+    },
+    {
+      "title": "Se exercitar",
+      "description": "Fazer 10 minutos de exercícios para o corpo",
+      "date": "2023-11-29T17:22:00",
+      "icon": "activity3.png"
+    },
+    {
+      "title": "Ler um livro",
+      "description": "Ler 30 minutos de um livro interessante",
+      "date": "2023-11-29T17:22:00",
+      "icon": "activity4.png"
+    },
+    {
+      "title": "Fazer uma caminhada",
+      "description": "Caminhar por 20 minutos ao ar livre",
+      "date": "2023-11-29T17:22:00",
+      "icon": "activity5.png"
+    },
+    {
+      "title": "Praticar meditação",
+      "description": "Fazer 10 minutos de meditação para relaxar",
+      "date": "2023-11-29T17:22:00",
+      "icon": "activity6.png"
+    }
+  ]

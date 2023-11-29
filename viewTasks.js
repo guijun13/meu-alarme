@@ -1,30 +1,67 @@
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import * as Notifications from 'expo-notifications';
+import tasks from './tasks.json';
+import formatDate from './utils/formatDate';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 const ViewTasks = ({ navigation }) => {
+  const tasksArray = Array.from(tasks);
+  const firstTask = tasksArray[0];
+  const remainingTasks = tasksArray.slice(1);
+
+  useEffect(() => {
+    const tasksArray = Array.from(tasks);
+
+    if (new Date(firstTask.date) < new Date(Date.now())) {
+      console.log('sim');
+      tasksArray.shift();
+    }
+
+    const scheduledDate = new Date(tasksArray[0].date);
+
+    // Schedule the notification
+    const notificationId = Notifications.scheduleNotificationAsync({
+      content: {
+        title: tasksArray[0].title,
+        body: tasksArray[0].description,
+      },
+      trigger: { date: scheduledDate },
+    });
+
+    // Optionally, you can log the notification ID for future reference
+    // console.log('Scheduled notification with ID:', notificationId);
+
+    // Clean up the notification if necessary (e.g., when the component unmounts)
+    return () => {
+      Notifications.cancelScheduledNotificationAsync(notificationId);
+    };
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Próxima atividade:</Text>
       <View style={styles.nextTask}>
-        <Text style={styles.nextTaskItem}>Tomar remédio</Text>
-        <Text style={styles.time}>10:00</Text>
+        <Text style={styles.nextTaskItem}>{firstTask.title}</Text>
+        <Text style={styles.time}>{formatDate(firstTask.date)}</Text>
       </View>
 
       <View style={styles.divider} />
 
       <View style={styles.tasksList}>
-        <View style={styles.task}>
-          <Text style={styles.itemList}>Tomar água</Text>
-          <Text style={styles.time}>10:10</Text>
-        </View>
-        <View style={styles.task}>
-          <Text style={styles.itemList}>Almoçar</Text>
-          <Text style={styles.time}>11:00</Text>
-        </View>
-        <View style={styles.task}>
-          <Text style={styles.itemList}>Tomar remédio</Text>
-          <Text style={styles.time}>12:00</Text>
-        </View>
+        {remainingTasks.map((task, index) => (
+          <View style={styles.task} key={index}>
+            <Text style={styles.itemList}>{task.title}</Text>
+            <Text style={styles.time}>{formatDate(task.date)}</Text>
+          </View>
+        ))}
       </View>
 
       <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('EditTasks')}>
