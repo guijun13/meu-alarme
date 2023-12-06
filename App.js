@@ -9,7 +9,7 @@ const Stack = createNativeStackNavigator();
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="ViewTasks">
+      <Stack.Navigator initialRouteName="EditTasks">
         <Stack.Screen name="ViewTasks" component={ViewTasks} />
         <Stack.Screen
           name="EditTasks"

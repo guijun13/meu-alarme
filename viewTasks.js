@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import tasksJSON from './tasks.json';
 import formatDate from './utils/formatDate';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -13,40 +14,56 @@ Notifications.setNotificationHandler({
 });
 
 const ViewTasks = ({ route, navigation }) => {
-  const tasks = route.params !== undefined ? route.params : tasksJSON;
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const tasksData = await AsyncStorage.getItem('tasks');
+        if (tasksData !== null) {
+          const parsedTasks = JSON.parse(tasksData);
+          parsedTasks.map((task) => {
+            const taskDateFormat = task.date.day + 'T' + task.date.hour + ':00';
+            task.date = taskDateFormat;
+          });
+          setTasks(parsedTasks);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchTasks();
+
+    const scheduleNotification = async () => {
+      // console.log(new Date(tasks[0].date));
+      try {
+        const notificationId = await Notifications.scheduleNotificationAsync({
+          content: {
+            title: tasks[0]?.name,
+          },
+          trigger: { date: new Date(tasks[0]?.date) },
+        });
+        console.info('Notification scheduled with ID:', notificationId);
+      } catch (error) {
+        console.error('Failed to schedule notification:', error);
+      }
+    };
+
+    scheduleNotification();
+  }, []);
+
+  // tasks.map((task) => {
+  //   const taskDateFormat = task.date.day + 'T' + task.date.hour + ':00.000';
+  //   task.date = new Date(taskDateFormat);
+  // });
 
   const firstTask = tasks[0];
   const remainingTasks = tasks.slice(1);
 
-  tasks.map((task) => {
-    const taskDateFormat = task.date.day + 'T' + task.date.hour + ':00.000Z';
-    task.date = new Date(taskDateFormat);
-  });
-
-  useEffect(() => {
-    if (new Date(firstTask.date) < new Date(Date.now())) {
-      tasks.shift();
-    }
-
-    const scheduledDate = new Date(tasks[0].date);
-
-    // Schedule the notification
-    const notificationId = Notifications.scheduleNotificationAsync({
-      content: {
-        title: tasks[0].name,
-      },
-      trigger: { date: scheduledDate },
-    });
-
-    // Clean up the notification if necessary (e.g., when the component unmounts)
-    return () => {
-      Notifications.cancelScheduledNotificationAsync(notificationId);
-    };
-  }, []);
-
   return (
     <View style={styles.container}>
-      {tasks !== undefined && tasks !== null ? (
+      {tasks && firstTask ? (
         <React.Fragment>
           <Text style={styles.heading}>Próxima atividade:</Text>
           <View style={styles.nextTask}>

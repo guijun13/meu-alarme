@@ -67,8 +67,8 @@ const EditTasks = ({ navigation }) => {
   const renderItem = ({ item, index }) => (
     <View style={styles.task}>
       <Text style={styles.itemList}>{item.name}</Text>
-      <Text style={styles.itemList}>{item.date.day}</Text>
-      <Text style={styles.itemList}>{item.date.hour}</Text>
+      {/* <Text style={styles.itemList}>{item.date.day}</Text> */}
+      {/* <Text style={styles.itemList}>{item.date.hour}</Text> */}
       <View style={styles.taskButtons}>
         <TouchableOpacity onPress={() => handleEditTask(index)}>
           <Text style={styles.editButton}>Editar</Text>
@@ -79,8 +79,6 @@ const EditTasks = ({ navigation }) => {
       </View>
     </View>
   );
-
-  console.log('tasks: ', tasks);
 
   return (
     <View style={styles.container}>
@@ -108,7 +106,11 @@ const EditTasks = ({ navigation }) => {
         value={task.date.hour}
         onChangeText={(text) => setTask({ ...task, date: { ...task.date, hour: text } })}
       />
-      <TouchableOpacity style={styles.addButton} onPress={handleAddTask}>
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={handleAddTask}
+        disabled={!task.name && !task.date.day && !task.date.hour}
+      >
         <Text style={styles.addButtonText}>{editIndex !== -1 ? 'Atualizar' : 'Adicionar'}</Text>
       </TouchableOpacity>
       <FlatList
