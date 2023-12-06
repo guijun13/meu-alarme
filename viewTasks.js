@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import * as Notifications from 'expo-notifications';
-import tasks from './tasks.json';
+import tasksJSON from './tasks.json';
 import formatDate from './utils/formatDate';
 
 Notifications.setNotificationHandler({
@@ -12,32 +12,31 @@ Notifications.setNotificationHandler({
   }),
 });
 
-const ViewTasks = ({ navigation }) => {
-  const tasksArray = Array.from(tasks);
-  const firstTask = tasksArray[0];
-  const remainingTasks = tasksArray.slice(1);
+const ViewTasks = ({ route, navigation }) => {
+  const tasks = route.params !== undefined ? route.params : tasksJSON;
+
+  const firstTask = tasks[0];
+  const remainingTasks = tasks.slice(1);
+
+  tasks.map((task) => {
+    const taskDateFormat = task.date.day + 'T' + task.date.hour + ':00.000Z';
+    task.date = new Date(taskDateFormat);
+  });
 
   useEffect(() => {
-    const tasksArray = Array.from(tasks);
-
     if (new Date(firstTask.date) < new Date(Date.now())) {
-      console.log('sim');
-      tasksArray.shift();
+      tasks.shift();
     }
 
-    const scheduledDate = new Date(tasksArray[0].date);
+    const scheduledDate = new Date(tasks[0].date);
 
     // Schedule the notification
     const notificationId = Notifications.scheduleNotificationAsync({
       content: {
-        title: tasksArray[0].title,
-        body: tasksArray[0].description,
+        title: tasks[0].name,
       },
       trigger: { date: scheduledDate },
     });
-
-    // Optionally, you can log the notification ID for future reference
-    // console.log('Scheduled notification with ID:', notificationId);
 
     // Clean up the notification if necessary (e.g., when the component unmounts)
     return () => {
@@ -47,22 +46,28 @@ const ViewTasks = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Próxima atividade:</Text>
-      <View style={styles.nextTask}>
-        <Text style={styles.nextTaskItem}>{firstTask.title}</Text>
-        <Text style={styles.time}>{formatDate(firstTask.date)}</Text>
-      </View>
-
-      <View style={styles.divider} />
-
-      <View style={styles.tasksList}>
-        {remainingTasks.map((task, index) => (
-          <View style={styles.task} key={index}>
-            <Text style={styles.itemList}>{task.title}</Text>
-            <Text style={styles.time}>{formatDate(task.date)}</Text>
+      {tasks !== undefined && tasks !== null ? (
+        <React.Fragment>
+          <Text style={styles.heading}>Próxima atividade:</Text>
+          <View style={styles.nextTask}>
+            <Text style={styles.nextTaskItem}>{firstTask.name}</Text>
+            <Text style={styles.time}>{formatDate(firstTask.date)}</Text>
           </View>
-        ))}
-      </View>
+
+          <View style={styles.divider} />
+
+          <View style={styles.tasksList}>
+            {remainingTasks.map((task, index) => (
+              <View style={styles.task} key={index}>
+                <Text style={styles.itemList}>{task.name}</Text>
+                <Text style={styles.time}>{formatDate(task.date)}</Text>
+              </View>
+            ))}
+          </View>
+        </React.Fragment>
+      ) : (
+        <Text style={styles.heading}>Não há tarefas cadastradas</Text>
+      )}
 
       <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('EditTasks')}>
         <Text style={styles.addButtonText}>Ver tarefas</Text>
