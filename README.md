@@ -25,7 +25,10 @@ Ter no mínimo npm > 6 e node > 14
 5. Irá mostrar um QR-code que é possível ser escaneado pelo aplicativo Expo Go
 6. Escaneie o QR-code, que abrirá o app meu-alarme
 
-Na página inicial, é possível adicionar e editar a lista de tarefas
+## Funcionamento
+
+Na página inicial, é possível adicionar e editar a lista de tarefas, com nome, data e horário da tarefa
+
 ![WhatsApp Image 2023-12-13 at 16 04 53](https://github.com/guijun13/meu-alarme/assets/48109548/187dd942-3a71-4935-98c3-f875b416bac4)
 
 
