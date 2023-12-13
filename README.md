@@ -26,5 +26,8 @@ Ter no mínimo npm > 6 e node > 14
 6. Escaneie o QR-code, que abrirá o app meu-alarme
 
 Na página inicial, é possível adicionar e editar a lista de tarefas
+![WhatsApp Image 2023-12-13 at 16 04 53](https://github.com/guijun13/meu-alarme/assets/48109548/187dd942-3a71-4935-98c3-f875b416bac4)
+
 
 Ao clicar em 'Ver to-do list', irá para a página de visualização da lista de tarefas, com destaque na próxima tarefa.
+![WhatsApp Image 2023-12-13 at 16 04 53 (1)](https://github.com/guijun13/meu-alarme/assets/48109548/6aeeea93-8d8f-4f6c-8759-ae75996466a1)
