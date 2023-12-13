@@ -13,7 +13,7 @@ Notifications.setNotificationHandler({
   }),
 });
 
-const ViewTasks = ({ route, navigation }) => {
+const ViewTasks = ({ navigation }) => {
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const ViewTasks = ({ route, navigation }) => {
         if (tasksData !== null) {
           const parsedTasks = JSON.parse(tasksData);
           parsedTasks.map((task) => {
-            const taskDateFormat = task.date.day + 'T' + task.date.hour + ':00';
+            const taskDateFormat = task.date.day + 'T' + task.date.hour + ':00-03:00';
             task.date = taskDateFormat;
           });
           setTasks(parsedTasks);
@@ -36,7 +36,6 @@ const ViewTasks = ({ route, navigation }) => {
     fetchTasks();
 
     const scheduleNotification = async () => {
-      // console.log(new Date(tasks[0].date));
       try {
         const notificationId = await Notifications.scheduleNotificationAsync({
           content: {

@@ -96,13 +96,13 @@ const EditTasks = ({ navigation }) => {
       />
       <TextInput
         style={styles.input}
-        placeholder="Digite o dia da tarefa"
+        placeholder="Digite o dia da tarefa (YYYY-MM-DD)"
         value={task.date.day}
         onChangeText={(text) => setTask({ ...task, date: { ...task.date, day: text } })}
       />
       <TextInput
         style={styles.input}
-        placeholder="Digite a hora da tarefa"
+        placeholder="Digite a hora da tarefa (HH:MM)"
         value={task.date.hour}
         onChangeText={(text) => setTask({ ...task, date: { ...task.date, hour: text } })}
       />
